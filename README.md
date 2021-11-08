@@ -18,6 +18,12 @@ pip install chkdns
 chkdns --host github.com
 ```
 
+Alternatively you can run with docker:
+
+```bash
+docker run -rm -it ghcr.io/chelnak/chkdns:main --host helloitscraig.co.uk
+```
+
 ## Develop
 
 ### Install dependencies
