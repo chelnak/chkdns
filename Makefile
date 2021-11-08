@@ -8,7 +8,7 @@ tag:
 
 build: check
 	@source $(VENV)
-	python tools/bump_version.py
+	python ./tools/bump_version.py
 	@poetry build
 
 check:

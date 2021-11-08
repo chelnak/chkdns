@@ -2,8 +2,6 @@ import toml
 import os
 from pkg_resources import parse_version
 
-# Exception: The ref refs/pull/55/merge is not valid.
-
 
 def bump_version_from_ref() -> None:
     """Bumps the version property inside pyproject.toml."""
@@ -11,9 +9,10 @@ def bump_version_from_ref() -> None:
     ref = os.environ.get("GITHUB_REF", "refs/is/invalid")
 
     if not ref.startswith("refs/tags/v"):
-        raise Exception(
+        print(
             f"The given ref ({ref}) didn't match the requirements for a version increment."
         )
+        return
 
     ref_suffix = ref.split("/")
     project_file = "pyproject.toml"
@@ -35,4 +34,7 @@ def bump_version_from_ref() -> None:
 
 
 if __name__ == "__main__":
-    bump_version_from_ref()
+    try:
+        bump_version_from_ref()
+    except Exception:
+        raise
