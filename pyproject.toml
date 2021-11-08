@@ -13,6 +13,7 @@ rich = "^10.13.0"
 httpx = "^0.20.0"
 mypy = "^0.910"
 asyncio = "^3.4.3"
+toml = "^0.10.2"
 
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
