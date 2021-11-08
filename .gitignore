@@ -1,0 +1,7 @@
+_archive
+__pycache__
+*.pyc
+textual.log
+dist
+.mypy_cache
+.DS_Store

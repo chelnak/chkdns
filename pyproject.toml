@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "chkdns"
+version = "0.1.0"
+homepage = "https://github.com/chelnak/chkdns"
+description = "A tool to check global dns propagation"
+authors = ["Craig Gumbley <craiggumbley@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.0.3"
+rich = "^10.13.0"
+httpx = "^0.20.0"
+mypy = "^0.910"
+asyncio = "^3.4.3"
+
+[tool.poetry.dev-dependencies]
+black = "^21.9b0"
+pre-commit = "^2.15.0"
+mypy = "^0.910"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+chkdns = "chkdns.app:cli"
