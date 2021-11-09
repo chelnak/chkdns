@@ -6,6 +6,8 @@ from random import choice
 from .servers import SERVERS
 from .mocks import RESPONSES
 
+from .. import __version__
+
 
 class QueryTimeoutException(Exception):
     """A query timeout exception."""
@@ -37,8 +39,9 @@ class Client:
 
     async def request(self, endpoint: str, method: str = "GET") -> httpx.Response:
         """Make an async http request."""
+        headers = {"user-agent": f"chkdns/{__version__}"}
         async with httpx.AsyncClient(
-            timeout=self.timeout, base_url=self.base_url
+            timeout=self.timeout, base_url=self.base_url, headers=headers
         ) as client:
             response = await client.request(method=method, url=endpoint)
             return response
@@ -69,7 +72,6 @@ class Client:
 
         else:
             raw_response = await self.request(endpoint=endpoint)
-
             if raw_response.is_error:
                 raise QueryException(raw_response.json())
 
