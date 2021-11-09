@@ -8,6 +8,7 @@ from rich import box
 from rich.console import Console
 from rich.progress import track
 from rich.table import Table
+from rich.live import Live
 
 from .whatsmydns import Client, QueryTimeoutException
 from . import __version__
@@ -46,53 +47,58 @@ async def cli(type, host):
 
     dns = Client(use_mock=False)
     servers = dns.get_servers()
-
-    table = Table(box=box.SIMPLE, leading=1, expand=True)
-    table.add_column("", no_wrap=True)
-    table.add_column("location", no_wrap=True)
-    table.add_column("provider", no_wrap=True)
-    table.add_column("result", justify="center", no_wrap=True)
-    table.add_column("response", no_wrap=True)
-
     stats = DefaultDict(int)
     servers_count = len(servers)
 
-    for server in track(
-        sorted(servers, key=lambda server: server["provider"]),
-        description=f"Checking DNS propagation for {host}",
-        transient=True,
-    ):
+    with Live(console=console) as live:
 
-        try:
-            response = await dns.query(server["id"], type, host)
-            data = response["data"][0]
+        table = Table(box=box.SIMPLE, leading=1, expand=True)
+        table.add_column("", no_wrap=True)
+        table.add_column("location", no_wrap=True)
+        table.add_column("provider", no_wrap=True)
+        table.add_column("result", justify="center", no_wrap=True)
+        table.add_column("response", no_wrap=True)
 
-            if data["rcode"] == "NOERROR":
-                stats["success"] += 1
-                result = "✅"
-            elif data["rcode"] == "SERVFAIL":
-                result = "❌"
-                stats["fail"] += 1
-            else:
-                result = "❓"
-                stats["unknown"] += 1
+        # for server in track(
+        #     sorted(servers, key=lambda server: server["provider"]),
+        #     description=f"Checking DNS propagation for {host}",
+        #     transient=True,
+        # ):
 
-            answer = ", ".join(answer.split()[-1] for answer in data["answers"])
-        except QueryTimeoutException:
+        for server in sorted(servers, key=lambda server: server["provider"]):
 
-            result = "⏳"
-            answer = "DNS query timed out."
-            stats["timeout"] += 1
+            try:
+                response = await dns.query(server["id"], type, host)
+                data = response["data"][0]
 
-        except Exception:
-            console.print_exception()
-            sys.exit(1)
+                if data["rcode"] == "NOERROR":
+                    stats["success"] += 1
+                    result = "✅"
+                elif data["rcode"] == "SERVFAIL":
+                    result = "❌"
+                    stats["fail"] += 1
+                else:
+                    result = "❓"
+                    stats["unknown"] += 1
 
-        table.add_row(
-            server["flag"], server["location"], server["provider"], result, answer
-        )
+                answer = ", ".join(answer.split()[-1] for answer in data["answers"])
+            except QueryTimeoutException:
 
-    score = stats["success"] / servers_count * 100
-    table.caption = f"{score:.2f}% of servers responded successfully for {host}."
+                result = "⏳"
+                answer = "DNS query timed out."
+                stats["timeout"] += 1
 
-    console.print(table)
+            except Exception:
+                console.print_exception()
+                sys.exit(1)
+
+            table.add_row(
+                server["flag"], server["location"], server["provider"], result, answer
+            )
+
+            score = stats["success"] / servers_count * 100
+            table.caption = (
+                f"{score:.2f}% of servers responded successfully for {host}."
+            )
+
+            live.update(table)
