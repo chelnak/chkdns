@@ -4,7 +4,7 @@
 
 Harness the power of [whatsmydns](https://whatsmydns.net) from the command-line.
 
-[![asciicast](https://asciinema.org/a/447827.svg)](https://asciinema.org/a/447827)
+[![chkdns](media/cli.png)]
 
 ## Installing with pip
 
