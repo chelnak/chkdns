@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chkdns"
-version = "0.1.2"
+version = "0.2.0"
 homepage = "https://github.com/chelnak/chkdns"
 description = "A tool to check global dns propagation"
 authors = ["Craig Gumbley <craiggumbley@gmail.com>"]
