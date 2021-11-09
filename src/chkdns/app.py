@@ -46,12 +46,12 @@ async def cli(type, host):
     dns = Client(use_mock=False)
     servers = dns.get_servers()
 
-    table = Table(box=box.SIMPLE, leading=1)
+    table = Table(box=box.SIMPLE, leading=1, expand=True)
     table.add_column("", no_wrap=True)
     table.add_column("location", no_wrap=True)
     table.add_column("provider", no_wrap=True)
-    table.add_column("result", justify="center")
-    table.add_column("answers", no_wrap=True)
+    table.add_column("result", justify="center", no_wrap=True)
+    table.add_column("response", no_wrap=True)
 
     servers_count = len(servers)
     success_count = 0
