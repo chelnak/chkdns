@@ -21,7 +21,7 @@ chkdns --host github.com
 Alternatively you can run with docker:
 
 ```bash
-docker run -rm -it ghcr.io/chelnak/chkdns:main --host github.com
+docker run -rm -it ghcr.io/chelnak/chkdns:latest --host github.com
 ```
 
 ## Develop
