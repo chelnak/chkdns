@@ -3,16 +3,15 @@ import sys
 import asyncio
 
 from functools import wraps
-from typing import DefaultDict
 
 from rich import box
 from rich.console import Console
-from rich.repr import T
 from rich.style import Style
 from rich.table import Column, Table
 from rich.live import Live
 
 from .whatsmydns import Client, QueryTimeoutException
+from .stats import Stats
 from . import __version__
 
 CLI_HELP = """
@@ -24,31 +23,6 @@ chkdns is powered by whatsmydns.net!
 TYPE_CHOICES = ["A", "AAAA", "CNAME", "MX", "NS", "PTR", "SOA", "SRV", "TXT", "CAA"]
 
 RESULT_EMOJIS = {"succeeded": "✅", "failed": "❌", "timeout": "⌛", "unknown": "❓"}
-
-
-class Stats(object):
-    """A utility object used to store statistics."""
-
-    def __init__(self, server_count: int):
-        """A utility object used to store statistics.
-
-        Args:
-            server_count (int): The number of servers. Used to calculate percentages.
-        """
-        self.server_count = server_count
-        self.stats: dict[str, int] = DefaultDict(int)
-
-    def get_types(self) -> list[str]:
-        """Returns a list of all types."""
-        return list(self.stats.keys())
-
-    def add(self, type) -> None:
-        """Increment the count of the given type. If the type does not exist, it is added to the data structure."""
-        self.stats[type] += 1
-
-    def percentage_of(self, type) -> str:
-        """Returns the percentage of the given type as a string."""
-        return f"{self.stats[type] / self.server_count * 100:.2f}%"
 
 
 def coro(f):
