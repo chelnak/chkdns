@@ -1,5 +1,5 @@
 import click
-from validators import domain
+from validators import domain  # type: ignore
 
 
 class DOMAIN(click.ParamType):
