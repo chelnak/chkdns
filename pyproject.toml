@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chkdns"
-version = "0.2.0"
+version = "0.3.0"
 homepage = "https://github.com/chelnak/chkdns"
 description = "A tool to check global dns propagation"
 authors = ["Craig Gumbley <craiggumbley@gmail.com>"]
@@ -14,6 +14,7 @@ httpx = "^0.20.0"
 mypy = "^0.910"
 asyncio = "^3.4.3"
 toml = "^0.10.2"
+validators = "^0.18.2"
 
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
