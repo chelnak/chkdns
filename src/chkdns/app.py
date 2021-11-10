@@ -12,6 +12,7 @@ from rich.live import Live
 
 from .whatsmydns import Client, QueryTimeoutException
 from .stats import Stats
+from .types import DOMAIN
 from . import __version__
 
 CLI_HELP = """
@@ -41,14 +42,13 @@ def coro(f):
     type=click.Choice(TYPE_CHOICES),
     help="The type of record to query for.",
 )
-@click.option("--host", required=True, help="A valid hostname.")
+@click.option("--host", type=DOMAIN(), required=True, help="A valid domain.")
 @click.version_option(__version__)
 @coro
 async def cli(type, host):
 
     console = Console()
-
-    dns = Client(use_mock=False)
+    dns = Client()
     servers = dns.get_servers()
     stats = Stats(server_count=len(servers))
 
