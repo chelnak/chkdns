@@ -10,7 +10,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.9"
 click = "^8.0.3"
-rich = "^10.13.0"
+rich = "^11.0.0"
 httpx = "^0.20.0"
 mypy = "^0.910"
 asyncio = "^3.4.3"
