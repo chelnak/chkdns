@@ -1,6 +1,9 @@
-import toml
 import os
+
+import toml
 from pkg_resources import parse_version
+
+# Exception: The ref refs/pull/55/merge is not valid.
 
 
 def bump_version_from_ref() -> None:
@@ -14,7 +17,7 @@ def bump_version_from_ref() -> None:
         )
         return
 
-    ref_suffix = ref.split("/")
+    ref_suffix = ref.split("/")[-1]
     project_file = "pyproject.toml"
     project = toml.load(project_file)
 
@@ -23,7 +26,9 @@ def bump_version_from_ref() -> None:
     is_next_version = parse_version(next_version) > parse_version(current_version)
 
     if not is_next_version:
-        f"✨ No version bump needed. Next version was {next_version} and current version is {current_version}."
+        print(
+            f"✨ No version bump needed. Next version was {next_version} and current version is {current_version}."
+        )
         return
 
     print(f"⭐ Next version will be: {next_version}")
@@ -34,7 +39,4 @@ def bump_version_from_ref() -> None:
 
 
 if __name__ == "__main__":
-    try:
-        bump_version_from_ref()
-    except Exception:
-        raise
+    bump_version_from_ref()
