@@ -3,7 +3,7 @@ import socket
 from urllib.parse import urlencode
 from typing import Any, Optional
 from random import choice
-from .servers import SERVERS
+from .servers import SERVERS, Server
 from .mocks import RESPONSES
 
 from .. import __version__
@@ -52,7 +52,7 @@ class Client:
             response = await client.request(method=method, url=endpoint)
             return response
 
-    def get_servers(self) -> list[dict[str, str]]:
+    def get_servers(self) -> list[Server]:
         """Returns a list of queriable servers."""
         return SERVERS
 
