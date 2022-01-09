@@ -50,6 +50,12 @@ The project uses [pre-commit](https://pre-commit.com/) for commit time checking.
 pre-commit install
 ```
 
+### Updating the server list
+
+Sometimes the list of servers used by `chkdns` can become stale resulting in an `Invalid server` response for certain requests. When this happens it is usually time to update the server list to match what is being used by [whatsmydns.net](https://www.whatsmydns.net/).
+
+Run `make scrap_servers` to generate a new list then update the `SERVERS` variable in [this file](./src/chkdns/whatsmydns/servers.py#95).
+
 ### Releasing stuff
 
 Releasing is a semi manual but well oiled method. Tags are used to trigger the release steps in the ci process.

@@ -16,3 +16,7 @@ check:
 	black --check .
 	mypy tools
 	mypy src/chkdns
+
+scrape_servers:
+	@source $(VENV)
+	@python ./tools/scraper.py
