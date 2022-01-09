@@ -10,7 +10,7 @@ from rich.style import Style
 from rich.table import Column, Table
 from rich.live import Live
 
-from .whatsmydns import Client, QueryTimeoutException
+from .whatsmydns import Client, QueryTimeoutException, InvalidServerException
 from .stats import Stats
 from .types import DOMAIN
 from . import __version__
@@ -81,6 +81,11 @@ async def cli(type, host):
                 result = "timeout"
                 answer = "DNS query timed out."
                 stats.add(type="timeout")
+
+            except InvalidServerException:
+                result = "failed"
+                answer = "Invalid server."
+                stats.add(type="failed")
 
             except Exception:
                 console.print_exception()

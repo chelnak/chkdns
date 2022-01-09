@@ -21,6 +21,12 @@ class QueryException(Exception):
     pass
 
 
+class InvalidServerException(Exception):
+    """An invalid server exception."""
+
+    pass
+
+
 class Client:
     def __init__(
         self,
@@ -73,7 +79,11 @@ class Client:
         else:
             raw_response = await self.request(endpoint=endpoint)
             if raw_response.is_error:
-                raise QueryException(raw_response.json())
+
+                if raw_response.json()["errors"]["server"][0] == "Invalid server":
+                    raise InvalidServerException(raw_response.json())
+                else:
+                    raise QueryException(raw_response.json())
 
             response = raw_response.json()
 
