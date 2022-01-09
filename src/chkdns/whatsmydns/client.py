@@ -3,7 +3,7 @@ import socket
 from urllib.parse import urlencode
 from typing import Any, Optional
 from random import choice
-from .servers import SERVERS
+from .servers import SERVERS, Server
 from .mocks import RESPONSES
 
 from .. import __version__
@@ -17,6 +17,12 @@ class QueryTimeoutException(Exception):
 
 class QueryException(Exception):
     """A query exception."""
+
+    pass
+
+
+class InvalidServerException(Exception):
+    """An invalid server exception."""
 
     pass
 
@@ -46,7 +52,7 @@ class Client:
             response = await client.request(method=method, url=endpoint)
             return response
 
-    def get_servers(self) -> list[dict[str, str]]:
+    def get_servers(self) -> list[Server]:
         """Returns a list of queriable servers."""
         return SERVERS
 
@@ -73,7 +79,11 @@ class Client:
         else:
             raw_response = await self.request(endpoint=endpoint)
             if raw_response.is_error:
-                raise QueryException(raw_response.json())
+
+                if raw_response.json()["errors"]["server"][0] == "Invalid server":
+                    raise InvalidServerException(raw_response.json())
+                else:
+                    raise QueryException(raw_response.json())
 
             response = raw_response.json()
 

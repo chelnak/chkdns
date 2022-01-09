@@ -10,7 +10,7 @@ from rich.style import Style
 from rich.table import Column, Table
 from rich.live import Live
 
-from .whatsmydns import Client, QueryTimeoutException
+from .whatsmydns import Client, QueryTimeoutException, InvalidServerException
 from .stats import Stats
 from .types import DOMAIN
 from . import __version__
@@ -61,10 +61,10 @@ async def cli(type, host):
         table.add_column("result", justify="center", no_wrap=True)
         table.add_column("response", no_wrap=True)
 
-        for server in sorted(servers, key=lambda server: server["provider"]):
+        for server in sorted(servers, key=lambda server: server.provider):
 
             try:
-                response = await dns.query(server["id"], type, host)
+                response = await dns.query(server.id, type, host)
                 data = response["data"][0]
 
                 if data["rcode"] == "NOERROR":
@@ -82,14 +82,19 @@ async def cli(type, host):
                 answer = "DNS query timed out."
                 stats.add(type="timeout")
 
+            except InvalidServerException:
+                result = "failed"
+                answer = "Invalid server."
+                stats.add(type="failed")
+
             except Exception:
                 console.print_exception()
                 sys.exit(1)
 
             table.add_row(
-                server["flag"],
-                server["location"],
-                server["provider"],
+                server.flag,
+                server.location,
+                server.provider,
                 RESULT_EMOJIS[result],
                 answer,
             )
