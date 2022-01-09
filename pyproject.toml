@@ -1,11 +1,14 @@
+[build-system]
+requires = [ "poetry-core>=1.0.0",]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "chkdns"
-version = "0.3.1"
+version = "0.4.0"
 homepage = "https://github.com/chelnak/chkdns"
 description = "A tool to check global dns propagation"
-authors = ["Craig Gumbley <craiggumbley@gmail.com>"]
+authors = [ "Craig Gumbley <craiggumbley@gmail.com>",]
 license = "MIT"
-
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -27,10 +30,6 @@ requests = "^2.27.1"
 bs4 = "^0.0.1"
 types-requests = "^2.27.3"
 types-beautifulsoup4 = "^4.10.10"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 chkdns = "chkdns.app:cli"
