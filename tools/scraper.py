@@ -2,9 +2,6 @@ import requests
 import time
 from bs4 import BeautifulSoup
 from rich.repr import rich_repr
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 import json
 
 @rich_repr
