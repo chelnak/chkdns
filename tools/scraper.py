@@ -1,7 +1,7 @@
 import requests
-from bs4 import BeautifulSoup
+import time
 from rich.repr import rich_repr
-
+import json
 
 @rich_repr
 class Server(object):
@@ -30,31 +30,26 @@ class Server(object):
 
 
 def run():
-
-    url = "https://www.whatsmydns.net/#A/github.com"
-
-    page = requests.get(url)
-    soup = BeautifulSoup(page.text, "html.parser")
-
+    url = 'https://www.whatsmydns.net/api/servers'
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    result = requests.get(url,headers=headers).json()
     SERVERS = []
 
-    for i in soup.find_all(
-        class_="border-b py-1 px-2 text-xs leading-none flex items-center cursor-pointer"
-    ):
-
-        SERVERS.append(
-            Server(
-                id=i["data-id"],
-                latitude=i["data-latitude"],
-                longditude=i["data-longitude"],
-                location=i["data-location"],
-                provider=i["data-provider"],
-                country_code=i["data-country-code"],
+    for server in result:
+            SERVERS.append(Server(
+                id=server['id'],
+                latitude=server['latitude'],
+                longditude=server['longitude'],
+                location=server['location'],
+                provider=server['provider'],
+                country_code=server['country'],
             )
-        )
+       
+         )
 
-    print(SERVERS)
-
+    with open("servers.txt", "a") as servers:
+        for server in SERVERS:
+            servers.write(str(server) + ', \n')
 
 if __name__ == "__main__":
     run()
