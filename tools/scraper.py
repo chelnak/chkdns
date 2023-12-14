@@ -1,6 +1,5 @@
 import requests
 import time
-from bs4 import BeautifulSoup
 from rich.repr import rich_repr
 import json
 
