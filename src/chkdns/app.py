@@ -68,6 +68,7 @@ async def cli(type, host):
             try:
                 response = await dns.query(server.id, type, host)
                 data = response["data"][0]
+                # print(data)
                 if data["rcode"] == "NOERROR":
                     result = "succeeded"
                 elif data["rcode"] == "SERVFAIL":
@@ -118,4 +119,3 @@ async def cli(type, host):
             table.caption = caption
             live.update(table)
 
-cli()
