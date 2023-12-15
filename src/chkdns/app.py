@@ -10,10 +10,12 @@ from rich.style import Style
 from rich.table import Column, Table
 from rich.live import Live
 
-from .whatsmydns import Client, QueryTimeoutException, InvalidServerException
-from .stats import Stats
-from .types import DOMAIN
-from . import __version__
+from whatsmydns import Client, QueryTimeoutException, InvalidServerException
+from stats import Stats
+from domains import DOMAIN
+import importlib.metadata
+
+__version__ = importlib.metadata.version("chkdns")
 
 CLI_HELP = """
 Validate a domain against a list of global DNS servers.
@@ -60,13 +62,12 @@ async def cli(type, host):
         table.add_column("provider", no_wrap=True)
         table.add_column("result", justify="center", no_wrap=True)
         table.add_column("response", no_wrap=True)
-
+        i=0
         for server in sorted(servers, key=lambda server: server.provider):
-
+           
             try:
                 response = await dns.query(server.id, type, host)
                 data = response["data"][0]
-
                 if data["rcode"] == "NOERROR":
                     result = "succeeded"
                 elif data["rcode"] == "SERVFAIL":
@@ -75,7 +76,12 @@ async def cli(type, host):
                     result = "unknown"
 
                 stats.add(type=result)
-                answer = ", ".join(answer.split()[-1] for answer in data["answers"])
+                
+                if type=='SOA':
+                    answer = data['response'][0].split(' ', 2)
+                    answer = ' '.join(answer)
+                else:
+                    answer = ", ".join(answer.split()[-1] for answer in data["answers"])
 
             except QueryTimeoutException:
                 result = "timeout"
@@ -111,3 +117,5 @@ async def cli(type, host):
 
             table.caption = caption
             live.update(table)
+
+cli()
